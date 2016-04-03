@@ -1,0 +1,32 @@
+{
+	"users" : [
+		{
+			"id" : 1,
+			"name" : "Employee Yo",
+			"isEmployee" : true,
+			"isAffiliate" : false,
+			"createdDate" : "2015-01-01"
+		},
+		{
+			"id" : 2,
+			"name" : "Affiliate Yo",
+			"isEmployee" : false,
+			"isAffiliate" : true,
+			"createdDate" : "2015-01-01"
+		},
+		{
+			"id" : 3,
+			"name" : "Loyal Yo",
+			"isEmployee" : false,
+			"isAffiliate" : false,
+			"createdDate" : "2011-01-01"
+		},
+		{
+			"id" : 4,
+			"name" : "Newbie Yo",
+			"isEmployee" : false,
+			"isAffiliate" : false,
+			"createdDate" : "2016-04-01"
+		}		
+	]
+}
