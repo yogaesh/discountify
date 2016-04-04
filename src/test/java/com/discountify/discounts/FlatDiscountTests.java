@@ -12,11 +12,11 @@ import org.mockito.Mockito;
 import com.discountify.item.categories.ItemCategory;
 import com.discountify.pojo.Item;
 import com.discountify.pojo.Order;
-import com.discountify.services.DiscountService;
+import com.discountify.services.UtilService;
 
 public class FlatDiscountTests extends GenericDiscountTests {
 	
-	DiscountService discountService = Mockito.mock(DiscountService.class);
+	UtilService utilService = Mockito.mock(UtilService.class);
 	
 	public FlatDiscountTests() {
 		discount = new FlatDiscount();
@@ -25,16 +25,16 @@ public class FlatDiscountTests extends GenericDiscountTests {
 	@Test
 	public void checkApplicabilityNonQualifyingOrder() throws ParseException {
 		Order order = super.generateSampleOrder();
-		discount.setDiscountService(discountService);
-		Mockito.when(discount.discountService.getSubtotalExcludingCategories(order.getItems(), null)).thenReturn(39.96);
+		discount.setUtilService(utilService);
+		Mockito.when(discount.utilService.getSubtotalExcludingCategories(order.getItems(), null)).thenReturn(39.96);
 		assertEquals(false, discount.checkApplicability(order));
 	}
 
 	@Test
 	public void checkApplicabilityQualifyingOrder() {
 		Order order = generateSampleOrder();
-		discount.setDiscountService(discountService);
-		Mockito.when(discount.discountService.getSubtotalExcludingCategories(order.getItems(), null)).thenReturn(882.96);
+		discount.setUtilService(utilService);
+		Mockito.when(discount.utilService.getSubtotalExcludingCategories(order.getItems(), null)).thenReturn(882.96);
 		assertEquals(true, discount.checkApplicability(order));	
 	}
 	

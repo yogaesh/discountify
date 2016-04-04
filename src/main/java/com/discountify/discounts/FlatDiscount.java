@@ -1,7 +1,10 @@
 package com.discountify.discounts;
 
+import org.springframework.stereotype.Component;
+
 import com.discountify.pojo.Order;
 
+@Component
 public class FlatDiscount extends Discount{
 
 	public FlatDiscount() {
@@ -21,7 +24,14 @@ public class FlatDiscount extends Discount{
 		
 		double totalAmount = order.getTotalAmount();
 		if(totalAmount == 0.0){
-			totalAmount = discountService.getSubtotalExcludingCategories(order.getItems(), null);
+			if(utilService == null){
+				System.out.println("Util service is null");
+			}
+			if(userService == null){
+				System.out.println("User service is null");
+			}
+
+			totalAmount = utilService.getSubtotalExcludingCategories(order.getItems(), null);
 		}
 		
 		return totalAmount-order.getDiscounts() > 100 ? true : false;

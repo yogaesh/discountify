@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import com.discountify.exception.DiscountifyException;
 import com.discountify.exception.ErrorDefinitions;
+import com.discountify.item.categories.ItemCategory;
+import com.discountify.pojo.Item;
 import com.discountify.pojo.User;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
@@ -54,6 +56,29 @@ public class UtilService {
 			return true;
 		}
 		return false;
+	}
+	
+	public double getSubtotalExcludingCategories(List<Item> items, List<ItemCategory> categoriesToExclude){
+		
+		if (items == null){
+			return 0;
+		}
+		
+		double total = 0;
+		boolean includeAll = false;
+		
+		if(categoriesToExclude == null || categoriesToExclude.isEmpty()){
+			includeAll = true;
+		}
+		
+		for(Item item : items){
+			if(!includeAll && categoriesToExclude.contains(item.getCategory())){
+				continue;
+			}
+			total += item.getPrice();
+		}
+		
+		return total;
 	}
 }
 

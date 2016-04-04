@@ -2,6 +2,7 @@ package com.discountify.discounts;
 
 import static org.junit.Assert.*;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,8 +12,8 @@ import org.mockito.Mockito;
 import com.discountify.item.categories.ItemCategory;
 import com.discountify.pojo.Item;
 import com.discountify.pojo.Order;
-import com.discountify.services.DiscountService;
 import com.discountify.services.UserService;
+import com.discountify.services.UtilService;
 
 public abstract class GenericDiscountTests {
 
@@ -20,6 +21,11 @@ public abstract class GenericDiscountTests {
 	protected double discountValue;
 	protected int purchaseUnits;
 	protected UserService userService = Mockito.mock(UserService.class);
+	
+	protected double formatCurrency(double value){
+		 DecimalFormat currencyFormat = new DecimalFormat("#.00");
+		 return Double.valueOf(currencyFormat.format(value));
+	}
 	
 	@Test
 	public void checkApplicabilityNullOrder() {
@@ -37,8 +43,8 @@ public abstract class GenericDiscountTests {
 		
 		double expectedDiscount = calculateExpectedDiscount();
 		
-		DiscountService discountService = new DiscountService();
-		discount.setDiscountService(discountService);
+		UtilService utilService = new UtilService();
+		discount.setUtilService(utilService);
 		
 		assertEquals(new Double(expectedDiscount), new Double(discount.getDiscountAmount(generateSampleOrder())));
 	}
@@ -55,7 +61,7 @@ public abstract class GenericDiscountTests {
 	}
 	
 	protected double calculateExpectedDiscount(){
-		return discountValue * (5.99 + 24.99);
+		return formatCurrency(discountValue * (5.99 + 24.99));
 	}
 	
 	protected Order generateSampleOrder(){

@@ -1,0 +1,12 @@
+{
+  "items": [
+    {
+      "id": 1,
+      "description": "test",
+      "category": "GROCERY",
+      "price": 240
+    }
+  ],
+  "userid": 4,
+  "totalAmount" : 240
+}

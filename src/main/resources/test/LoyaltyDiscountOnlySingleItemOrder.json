@@ -1,0 +1,12 @@
+{
+  "items": [
+    {
+      "id": 1,
+      "description": "test",
+      "category": "MEDICAL",
+      "price": 10
+    }
+  ],
+  "userid": 3,
+  "totalAmount" : 10
+}

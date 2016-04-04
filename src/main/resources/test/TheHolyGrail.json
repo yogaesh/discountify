@@ -1,0 +1,42 @@
+{
+  "items": [
+    {
+      "id": 1,
+      "description": "test",
+      "category": "MEDICAL",
+      "price": 32.64
+    },
+    {
+      "id": 1,
+      "description": "test",
+      "category": "GROCERY",
+      "price": 25.34
+    },
+    {
+      "id": 1,
+      "description": "test",
+      "category": "GROCERY",
+      "price": 5.99
+    },
+    {
+      "id": 1,
+      "description": "test",
+      "category": "MEDICAL",
+      "price": 199.99
+    },
+    {
+      "id": 1,
+      "description": "test",
+      "category": "HOME",
+      "price": 249.99
+    },
+    {
+      "id": 1,
+      "description": "test",
+      "category": "OFFICE",
+      "price": 0.99
+    }
+  ],
+  "userid": 3,
+  "totalAmount" : 0
+}

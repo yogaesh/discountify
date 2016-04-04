@@ -22,23 +22,20 @@ public class UserService {
 	private Map<Integer, User> map;
 	@Autowired
 	private UtilService util;
-	
-	public UserService(){}
-	
-	public UserService(UtilService utilService){
+
+	public UserService() {
+	}
+
+	public UserService(UtilService utilService) {
 		this.util = utilService;
 	}
-	
+
 	@PostConstruct
-	public void init() throws DiscountifyException{
-		try{
-			String usersListJson = util.getResourceFileContents("seed/Users.json");
-			Gson gson = new Gson();
-			UserList userList = gson.fromJson(usersListJson, UserList.class);
-			this.setMap(util.getUserMapFromUserList(userList.getUsers()));
-		}catch(NullPointerException e){
-			e.printStackTrace();
-		}
+	public void init() throws DiscountifyException {
+		String usersListJson = util.getResourceFileContents("seed/Users.json");
+		Gson gson = new Gson();
+		UserList userList = gson.fromJson(usersListJson, UserList.class);
+		this.setMap(util.getUserMapFromUserList(userList.getUsers()));
 	}
 
 	public User getUserById(int userid) {

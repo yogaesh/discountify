@@ -1,8 +1,11 @@
 package com.discountify.discounts;
 
+import org.springframework.stereotype.Component;
+
 import com.discountify.pojo.Order;
 import com.discountify.pojo.User;
 
+@Component
 public class LoyaltyDiscount extends Discount {
 
 	public LoyaltyDiscount(){

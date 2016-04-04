@@ -1,35 +1,40 @@
 package com.discountify.services;
 
-import java.util.List;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 
-import com.discountify.item.categories.ItemCategory;
-import com.discountify.pojo.Item;
+import com.discountify.discounts.AffiliateDiscount;
+import com.discountify.discounts.EmployeeDiscount;
+import com.discountify.discounts.FlatDiscount;
+import com.discountify.discounts.LoyaltyDiscount;
+import com.discountify.pojo.Order;
 
 @Service
+@Scope(value = "request", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class DiscountService {
-	public double getSubtotalExcludingCategories(List<Item> items, List<ItemCategory> categoriesToExclude){
-		
-		if (items == null){
-			return 0;
-		}
-		
-		double total = 0;
-		boolean includeAll = false;
-		
-		if(categoriesToExclude == null || categoriesToExclude.isEmpty()){
-			includeAll = true;
-		}
-		
-		for(Item item : items){
-			if(!includeAll && categoriesToExclude.contains(item.getCategory())){
-				continue;
-			}
-			total += item.getPrice();
-		}
-		
-		return total;
+	@Autowired
+	private EmployeeDiscount employeeDiscount;
+	@Autowired
+	private AffiliateDiscount affiliateDiscount;
+	@Autowired
+	private LoyaltyDiscount loyaltyDiscount;
+	@Autowired
+	private FlatDiscount flatDiscount;
+	
+	private void chainDiscounts(){
+		employeeDiscount.setNextIfDiscountApplied(flatDiscount);
+		employeeDiscount.setNextIfDiscountNotApplied(affiliateDiscount);
+		affiliateDiscount.setNextIfDiscountApplied(flatDiscount);
+		affiliateDiscount.setNextIfDiscountNotApplied(loyaltyDiscount);
+		loyaltyDiscount.setNextIfDiscountApplied(flatDiscount);
+		loyaltyDiscount.setNextIfDiscountNotApplied(flatDiscount);
+	}
+	
+	public Order getDiscountAmount(Order originalOrder){
+		chainDiscounts();
+		return employeeDiscount.applyDiscount(originalOrder);
 	}
 	
 }

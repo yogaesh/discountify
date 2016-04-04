@@ -3,21 +3,22 @@ package com.discountify.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.discountify.services.UserService;
+import com.discountify.pojo.Order;
+import com.discountify.services.DiscountService;
 
 @RestController
 @RequestMapping("/orders/{orderId}")
 public class DiscountifyRestController {
 	
 	@Autowired
-	UserService userService;
+	DiscountService discountService;
 	
-	@RequestMapping("discount")
-	public String getDiscountForOrder(@RequestBody String orderJson) {
-		
-		//TODO: Expand implementation
-		return null;
+	@ResponseBody @RequestMapping(value="discount", method = {RequestMethod.POST}, consumes = {"application/json"})
+	public Order getDiscountForOrder(@RequestBody Order order) {
+		return discountService.getDiscountAmount(order);
 	}
 }
