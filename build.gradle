@@ -24,6 +24,17 @@ jacocoTestReport {
         csv.enabled false
         html.destination "${buildDir}/reports/coverage"
     }
+    
+     afterEvaluate {
+        classDirectories = files(classDirectories.files.collect {
+            fileTree(dir: it,
+                    exclude: ['com/discountify/pojo/**',
+                    		  'com/discountify/exception/**',
+                    		  'com/discountify/item/categories/**',
+                    		  'com/discountify/controllers/**',
+                    		  'com/discountify/DiscountifyApplication*'])
+        })
+    }
 }
 
 jar {
