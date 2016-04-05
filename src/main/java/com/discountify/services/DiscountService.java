@@ -1,8 +1,6 @@
 package com.discountify.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 
 import com.discountify.discounts.AffiliateDiscount;
@@ -12,7 +10,6 @@ import com.discountify.discounts.LoyaltyDiscount;
 import com.discountify.pojo.Order;
 
 @Service
-@Scope(value = "request", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class DiscountService {
 	@Autowired
 	private EmployeeDiscount employeeDiscount;
