@@ -1,5 +1,7 @@
 package com.discountify.services;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +33,7 @@ public class DiscountService {
 	
 	public Order getDiscountAmount(Order originalOrder){
 		chainDiscounts();
-		return employeeDiscount.applyDiscount(originalOrder);
+		return employeeDiscount.applyDiscount(Optional.of(originalOrder));
 	}
 	
 }

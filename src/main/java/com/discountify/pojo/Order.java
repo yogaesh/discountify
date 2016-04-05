@@ -9,6 +9,8 @@ import lombok.Setter;
 public class Order {
 	private List<Item> items;
 	private int userid;
-	private double discounts;
 	private double totalAmount;
+	private double discounts;
+	private double amountAfterDiscount;
+	private List<DiscountLineItem> discountDetails;
 }

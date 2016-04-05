@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.Optional;
 
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -36,8 +37,8 @@ public class LoyaltyDiscountTests extends GenericDiscountTests {
 		user.setId(1);
 		user.setCreatedDate(getPastDate(2,ChronoUnit.YEARS));
 		discount.setUserService(userService);
-		Mockito.when(discount.userService.getUserById(1)).thenReturn(user);
-		assertEquals(false, discount.checkApplicability(order));
+		Mockito.when(discount.userService.getUserById(1)).thenReturn(Optional.of(user));
+		assertEquals(false, discount.checkApplicability(Optional.of(order)));
 	}
 
 	@Test
@@ -48,8 +49,8 @@ public class LoyaltyDiscountTests extends GenericDiscountTests {
 		user.setId(2);
 		user.setCreatedDate(getPastDate(25, ChronoUnit.MONTHS));
 		discount.setUserService(userService);
-		Mockito.when(discount.userService.getUserById(2)).thenReturn(user);
-		assertEquals(true, discount.checkApplicability(order));	
+		Mockito.when(discount.userService.getUserById(2)).thenReturn(Optional.of(user));
+		assertEquals(true, discount.checkApplicability(Optional.of(order)));	
 	}
 	
 	private Date getPastDate(int displacement, ChronoUnit unit){

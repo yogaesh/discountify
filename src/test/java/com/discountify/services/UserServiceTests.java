@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.junit.Test;
 import org.mockito.Matchers;
@@ -77,16 +78,20 @@ public class UserServiceTests {
 	public void init() throws DiscountifyException, ParseException {
 		//userService.init();
 		assertEquals(userMap,userService.getMap());
+		System.out.println("Users in system: ");
+		for(Map.Entry<Integer, User> user : userService.getMap().entrySet()){
+			System.out.println(user.getKey() + ": " + user.toString());
+		}
 	}
 	
 	@Test
 	public void getUserByIdZero() throws DiscountifyException, ParseException {
-		assertEquals(null,userService.getUserById(0));
+		assertEquals(Optional.empty(), userService.getUserById(0));
 	}
 	
 	@Test
 	public void getUserByValidId() throws DiscountifyException, ParseException {
-		assertEquals(userMap.get(1),userService.getUserById(1));
+		assertEquals(userMap.get(1),userService.getUserById(1).get());
 	}
 
 	@Test
@@ -118,6 +123,10 @@ public class UserServiceTests {
 	public void isUserLoyalInvalid() throws DiscountifyException, ParseException {
 		assertEquals(false,userService.isUserLoyal(2));
 	}
-
+	
+	@Test
+	public void isUserLoyalNonExistentUser() throws DiscountifyException, ParseException {
+		assertEquals(false,userService.isUserLoyal(99));
+	}
 
 }

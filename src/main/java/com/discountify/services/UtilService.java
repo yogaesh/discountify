@@ -60,7 +60,9 @@ public class UtilService {
 	
 	public double getSubtotalExcludingCategories(List<Item> items, List<ItemCategory> categoriesToExclude){
 		
-		if (items == null){
+		return items.stream().filter(item -> !categoriesToExclude.contains(item.getCategory())).mapToDouble(Item::getPrice).sum();
+		
+		/*if (items == null){
 			return 0;
 		}
 		
@@ -78,7 +80,7 @@ public class UtilService {
 			total += item.getPrice();
 		}
 		
-		return total;
+		return total;*/
 	}
 }
 

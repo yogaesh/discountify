@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -26,16 +27,16 @@ public class FlatDiscountTests extends GenericDiscountTests {
 	public void checkApplicabilityNonQualifyingOrder() throws ParseException {
 		Order order = super.generateSampleOrder();
 		discount.setUtilService(utilService);
-		Mockito.when(discount.utilService.getSubtotalExcludingCategories(order.getItems(), null)).thenReturn(39.96);
-		assertEquals(false, discount.checkApplicability(order));
+		Mockito.when(discount.utilService.getSubtotalExcludingCategories(order.getItems(), new ArrayList<ItemCategory>())).thenReturn(39.96);
+		assertEquals(false, discount.checkApplicability(Optional.of(order)));
 	}
 
 	@Test
 	public void checkApplicabilityQualifyingOrder() {
 		Order order = generateSampleOrder();
 		discount.setUtilService(utilService);
-		Mockito.when(discount.utilService.getSubtotalExcludingCategories(order.getItems(), null)).thenReturn(882.96);
-		assertEquals(true, discount.checkApplicability(order));	
+		Mockito.when(discount.utilService.getSubtotalExcludingCategories(order.getItems(), new ArrayList<ItemCategory>())).thenReturn(882.96);
+		assertEquals(true, discount.checkApplicability(Optional.of(order)));	
 	}
 	
 	@Override

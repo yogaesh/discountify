@@ -1,10 +1,11 @@
 package com.discountify.discounts;
 
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Component;
 
 import com.discountify.pojo.Order;
-import com.discountify.pojo.User;
 
 @Component
 public class EmployeeDiscount extends Discount{
@@ -18,15 +19,10 @@ public class EmployeeDiscount extends Discount{
 	}
 	
 	@Override
-	protected boolean checkApplicability(Order order) {
-		if(order == null || order.getUserid() == 0){
-			return false;
-		}
-		if(discountService == null){
-			System.out.println("Discount service is also null");
-		}
-		User user = userService.getUserById(order.getUserid());
-		return (user == null ? false : user.isEmployee()); 
+	protected boolean checkApplicability(Optional<Order> order) {
+		return order.filter(orderEntry -> orderEntry.getUserid() > 0)
+				.flatMap(validOrder -> userService.getUserById(validOrder.getUserid()))
+				.filter(user -> user.isEmployee()).isPresent();
 	}
 
 }

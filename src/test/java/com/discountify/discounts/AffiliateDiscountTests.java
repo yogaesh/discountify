@@ -2,6 +2,8 @@ package com.discountify.discounts;
 
 import static org.junit.Assert.*;
 
+import java.util.Optional;
+
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -23,8 +25,8 @@ public class AffiliateDiscountTests extends GenericDiscountTests {
 		user.setId(1);
 		user.setAffiliate(false);
 		discount.setUserService(userService);
-		Mockito.when(discount.userService.getUserById(1)).thenReturn(user);
-		assertEquals(false, discount.checkApplicability(order));
+		Mockito.when(discount.userService.getUserById(1)).thenReturn(Optional.of(user));
+		assertEquals(false, discount.checkApplicability(Optional.of(order)));
 	}
 
 	@Test
@@ -35,7 +37,7 @@ public class AffiliateDiscountTests extends GenericDiscountTests {
 		user.setId(2);
 		user.setAffiliate(true);
 		discount.setUserService(userService);
-		Mockito.when(discount.userService.getUserById(2)).thenReturn(user);
-		assertEquals(true, discount.checkApplicability(order));	
+		Mockito.when(discount.userService.getUserById(2)).thenReturn(Optional.of(user));
+		assertEquals(true, discount.checkApplicability(Optional.of(order)));	
 	}
 }

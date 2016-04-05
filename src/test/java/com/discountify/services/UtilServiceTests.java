@@ -53,7 +53,6 @@ public class UtilServiceTests {
 		user.setId(1);
 		user.setAffiliate(false);
 		user.setEmployee(true);
-		user.setLoyal(false);
 		user.setName("Test Yo");
 		user.setCreatedDate(new Date());
 		userList.add(user);
@@ -70,11 +69,6 @@ public class UtilServiceTests {
 	@Test
 	public void isDateOverTwoYearsBackValid() throws ParseException {
 		assertEquals(true, utilService.isDateOverTwoYearsBack(getDateFromString("2014-04-01")));
-	}
-	
-	@Test
-	public void getSubtotalExcludingCategoriesNullCheck() {
-		assertEquals(new Double(0), new Double(utilService.getSubtotalExcludingCategories(null, null)));
 	}
 	
 	@Test
@@ -107,7 +101,7 @@ public class UtilServiceTests {
 		item2.setPrice(8.99);
 		items.add(item2);
 
-		assertEquals(new Double(5.99 + 8.99), new Double(utilService.getSubtotalExcludingCategories(items, null)));
+		assertEquals(new Double(5.99 + 8.99), new Double(utilService.getSubtotalExcludingCategories(items, new ArrayList<ItemCategory>())));
 	}
 	
 	@Test
@@ -130,8 +124,15 @@ public class UtilServiceTests {
 		item2.setId(2);
 		item2.setPrice(8.99);
 		items.add(item2);
+		
+		Item item3 = new Item();
+		item3.setCategory(ItemCategory.FMCG);
+		item3.setDescription("Soap");
+		item3.setId(3);
+		item3.setPrice(8.99);
+		items.add(item3);
 
-		assertEquals(new Double(8.99), new Double(utilService.getSubtotalExcludingCategories(items, categories)));
+		assertEquals(new Double(8.99 * 2), new Double(utilService.getSubtotalExcludingCategories(items, categories)));
 	}
 
 		

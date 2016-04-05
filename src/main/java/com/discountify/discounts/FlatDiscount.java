@@ -1,7 +1,12 @@
 package com.discountify.discounts;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.stereotype.Component;
 
+import com.discountify.item.categories.ItemCategory;
 import com.discountify.pojo.Order;
 
 @Component
@@ -17,24 +22,22 @@ public class FlatDiscount extends Discount{
 	}
 	
 	@Override
-	protected boolean checkApplicability(Order order) {
-		if(order == null || order.getItems() == null || order.getItems().isEmpty()){
+	protected boolean checkApplicability(Optional<Order> orderStream) {
+		List<ItemCategory> list = new ArrayList<>();
+		return orderStream.filter(order -> order.getItems() != null)
+		.map(order -> utilService.getSubtotalExcludingCategories(order.getItems(), list) - order.getDiscounts())
+		.filter(amount -> amount > 100).isPresent();
+		
+		/*if(order == null || order.getItems() == null || order.getItems().isEmpty()){
 			return false;
 		}
 		
 		double totalAmount = order.getTotalAmount();
 		if(totalAmount == 0.0){
-			if(utilService == null){
-				System.out.println("Util service is null");
-			}
-			if(userService == null){
-				System.out.println("User service is null");
-			}
-
 			totalAmount = utilService.getSubtotalExcludingCategories(order.getItems(), null);
 		}
 		
-		return totalAmount-order.getDiscounts() > 100 ? true : false;
+		return totalAmount-order.getDiscounts() > 100 ? true : false;*/
 	}
 	
 }

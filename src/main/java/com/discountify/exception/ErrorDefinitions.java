@@ -11,14 +11,6 @@ public enum ErrorDefinitions {
 	private final int code;
 	private final String description;
 
-	public String getDescription() {
-		return description;
-	}
-
-	public int getCode() {
-		return code;
-	}
-
 	@Override
 	public String toString() {
 		return code + ": " + description;

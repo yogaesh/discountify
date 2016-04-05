@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -28,14 +29,9 @@ public abstract class GenericDiscountTests {
 	}
 	
 	@Test
-	public void checkApplicabilityNullOrder() {
-		assertEquals(false, discount.checkApplicability(null));
-	}
-	
-	@Test
 	public void checkApplicabilityEmptyOrder() {
 		Order order = new Order();
-		assertEquals(false, discount.checkApplicability(order));
+		assertEquals(false, discount.checkApplicability(Optional.of(order)));
 	}
 	
 	@Test

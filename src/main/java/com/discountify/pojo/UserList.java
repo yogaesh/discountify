@@ -6,9 +6,8 @@ import java.util.List;
 import com.discountify.pojo.User;
 
 import lombok.Getter;
-import lombok.Setter;
 
-@Getter @Setter
+@Getter
 public class UserList {
 	private List<User> users;
 }

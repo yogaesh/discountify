@@ -3,23 +3,25 @@ package com.discountify.discounts;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.discountify.item.categories.ItemCategory;
+import com.discountify.pojo.DiscountLineItem;
 import com.discountify.pojo.Item;
 import com.discountify.pojo.Order;
-import com.discountify.services.DiscountService;
 import com.discountify.services.UserService;
 import com.discountify.services.UtilService;
 
-import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter @Component
+@Setter @Component
 public abstract class Discount {
+	@SuppressWarnings("unused")
 	private long id;
+	@SuppressWarnings("unused")
 	private String name;
 	private String description;
 	private Discount nextIfDiscountApplied;
@@ -32,11 +34,10 @@ public abstract class Discount {
 	protected UserService userService;
 	@Autowired
 	protected UtilService utilService;
-	@Autowired
-	protected DiscountService discountService;
 	
-	protected abstract boolean checkApplicability(Order order);
+	protected abstract boolean checkApplicability(Optional<Order> order);
 	protected double getDiscountAmount(Order order){
+		List<ItemCategory> categories = new ArrayList<>();
 		if(order == null){
 			return 0;
 		}
@@ -47,41 +48,45 @@ public abstract class Discount {
 		}
 		
 		double total = order.getTotalAmount();
-		if(total < 0){
-			return 0;
-		}
-
 		double currentDiscount = order.getDiscounts();
 		double netDiscount = 0;
 		
 		if(discountType.equals("absolute")){
 			if(total == 0){
-				total = utilService.getSubtotalExcludingCategories(items, null);
+				total = utilService.getSubtotalExcludingCategories(items, categories);
 			}
 			
 			netDiscount = purchaseUnits == 0 ? discountValue : ((int)((total-currentDiscount)/purchaseUnits)) * discountValue;
 			return formatCurrency(netDiscount);
 		}
-		
-		List<ItemCategory> categories = new ArrayList<>();
+
 		categories.add(ItemCategory.GROCERY);
 		netDiscount = discountValue * utilService.getSubtotalExcludingCategories(items, categories);
 		
 		return formatCurrency(netDiscount);
 	}
 	
-	public Order applyDiscount(Order order){
-		if(checkApplicability(order)){
+	public Order applyDiscount(Optional<Order> orderStream){
+		Order order = orderStream.get();
+		if(checkApplicability(orderStream)){
 			double currentDiscountAmount = order.getDiscounts();
-			order.setDiscounts(currentDiscountAmount + getDiscountAmount(order));
+			double discountAmount = getDiscountAmount(order);
+			order.setDiscounts(currentDiscountAmount + discountAmount);
+			DiscountLineItem lineItem = new DiscountLineItem();
+			lineItem.setDescription(description);
+			lineItem.setAmount(discountAmount);
+			if(order.getDiscountDetails() == null){
+				order.setDiscountDetails(new ArrayList<>());
+			}
+			order.getDiscountDetails().add(lineItem);
 			if(nextIfDiscountApplied != null){
-				order = nextIfDiscountApplied.applyDiscount(order);
+				order = nextIfDiscountApplied.applyDiscount(Optional.of(order));
 			}
 		}
 		else if(nextIfDiscountNotApplied != null){
-			order = nextIfDiscountNotApplied.applyDiscount(order);
+			order = nextIfDiscountNotApplied.applyDiscount(Optional.of(order));
 		}
-		return order; 
+		return order;
 	}
 	
 	protected double formatCurrency(double value){

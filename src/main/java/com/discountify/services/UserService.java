@@ -1,6 +1,7 @@
 package com.discountify.services;
 
 import java.util.Map;
+import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
@@ -12,6 +13,7 @@ import com.discountify.pojo.User;
 import com.discountify.pojo.UserList;
 import com.google.gson.Gson;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,6 +23,8 @@ import lombok.Setter;
 public class UserService {
 	private Map<Integer, User> map;
 	@Autowired
+	@Getter(value=AccessLevel.NONE)
+	@Setter(value=AccessLevel.NONE)
 	private UtilService util;
 
 	public UserService() {
@@ -38,8 +42,8 @@ public class UserService {
 		this.setMap(util.getUserMapFromUserList(userList.getUsers()));
 	}
 
-	public User getUserById(int userid) {
-		return map.get(userid);
+	public Optional<User> getUserById(int userid) {
+		return Optional.ofNullable(map.get(userid));
 	}
 
 	public boolean isUserEmployee(int userid) {
@@ -55,20 +59,10 @@ public class UserService {
 	}
 
 	private boolean checkUserProperty(int userid, String property) {
-		User user = map.get(userid);
-		if (user == null) {
-			return false;
-		}
-
-		switch (property) {
-		case "employee":
-			return user.isEmployee();
-		case "affiliate":
-			return user.isAffiliate();
-		case "loyal":
-			return util.isDateOverTwoYearsBack(user.getCreatedDate());
-		default:
-			return false;
-		}
+		return getUserById(userid)
+				.filter(user -> (property.equals("employee") ? user.isEmployee() : 
+								(property.equals("affiliate") ? user.isAffiliate() : 
+								util.isDateOverTwoYearsBack(user.getCreatedDate()))))
+				.isPresent();
 	}
 }
