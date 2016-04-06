@@ -2,20 +2,15 @@ package com.discountify.services;
 
 import static org.junit.Assert.*;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.junit.Test;
-import org.mockito.Matchers;
 import org.mockito.Mockito;
 
 import com.discountify.pojo.User;
+import com.discountify.data.UserRepository;
 import com.discountify.exception.DiscountifyException;
 import com.discountify.services.UserService;
 import com.discountify.services.UtilService;
@@ -24,64 +19,23 @@ public class UserServiceTests {
 	
 	private UtilService utilService;
 	private UserService userService;
-	private Map<Integer, User> userMap;
-	private List<User> userList;
+	private UserRepository userDB;
+	private User testUser1, testUser2;
 	
 	public UserServiceTests() throws DiscountifyException, ParseException{
-		String userListJson = "{\"userList\":[{\"id\":1,\"name\":\"Cool Yo\",\"isEmployee\":true,\"isAffiliate\":true,\"createdDate\":\"2010-01-01\"},{\"id\":2,\"name\":\"Dull Yo\",\"isEmployee\":false,\"isAffiliate\":false,\"createdDate\":\"2016-04-01\"}]}";
-		initUserList();
-		initUserMap();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		testUser1 = new User(1, "Cool Yo", true, true, format.parse("2010-01-01"));
+		testUser2 = new User(2, "Dull Yo", false, false, format.parse("2016-04-01"));
+
 		utilService = Mockito.mock(UtilService.class);
-		Mockito.when(utilService.getResourceFileContents(Matchers.anyString())).thenReturn(userListJson);
-		Mockito.when(utilService.getUserMapFromUserList(Matchers.anyListOf(User.class))).thenReturn(userMap);
-		Mockito.when(utilService.isDateOverTwoYearsBack(new SimpleDateFormat("yyyy-MM-dd").parse("2010-01-01"))).thenReturn(true);
-		Mockito.when(utilService.isDateOverTwoYearsBack(new SimpleDateFormat("yyyy-MM-dd").parse("2016-04-01"))).thenReturn(false);
-		userService = new UserService(utilService);
-		userService.init();
-	}
-	
-	private void initUserMap() throws ParseException{
-		if(userMap == null){
-			userMap = new HashMap<>();
-			userMap.put(1, userList.get(0));
-			userMap.put(2, userList.get(1));
-		}
-	}
-	
-	private void initUserList() throws ParseException{
-		
-		if(userList == null){
-			userList = new ArrayList<>(); 
-			
-			User user1 = new User();
-			user1.setAffiliate(true);
-			user1.setEmployee(true);
-			user1.setId(1);
-			
-			User user2 = new User();
-			user2.setAffiliate(false);
-			user2.setEmployee(false);
-			user2.setId(2);
-			
-			DateFormat format = new SimpleDateFormat("yyyy-dd-MM");
-			user1.setCreatedDate(format.parse("2010-01-01"));
-			user2.setCreatedDate(format.parse("2016-04-01"));
-			
-			userList.add(user1);
-			userList.add(user2);
+		Mockito.when(utilService.isDateOverTwoYearsBack(format.parse("2010-01-01"))).thenReturn(true);
+		Mockito.when(utilService.isDateOverTwoYearsBack(format.parse("2016-04-01"))).thenReturn(false);
 
-		}
+		userDB = Mockito.mock(UserRepository.class);
+		Mockito.when(userDB.findOne(1)).thenReturn(testUser1);
+		Mockito.when(userDB.findOne(2)).thenReturn(testUser2);
 		
-	}
-
-	@Test
-	public void init() throws DiscountifyException, ParseException {
-		//userService.init();
-		assertEquals(userMap,userService.getMap());
-		System.out.println("Users in system: ");
-		for(Map.Entry<Integer, User> user : userService.getMap().entrySet()){
-			System.out.println(user.getKey() + ": " + user.toString());
-		}
+		userService = new UserService(utilService, userDB);
 	}
 	
 	@Test
@@ -91,7 +45,7 @@ public class UserServiceTests {
 	
 	@Test
 	public void getUserByValidId() throws DiscountifyException, ParseException {
-		assertEquals(userMap.get(1),userService.getUserById(1).get());
+		assertEquals(testUser1,userService.getUserById(1).get());
 	}
 
 	@Test

@@ -37,7 +37,8 @@ public class DiscountifyApplicationTests {
 	private UtilService util;
 	@Value("${local.server.port}")
     int port;
-	Gson gson = new Gson();
+	@Autowired
+	Gson gson;
 	Map<String, String> messages;
 	
 	@Before

@@ -3,15 +3,12 @@ package com.discountify.services;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.discountify.exception.DiscountifyException;
+import com.discountify.data.UserRepository;
 import com.discountify.pojo.User;
-import com.discountify.pojo.UserList;
-import com.google.gson.Gson;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -26,24 +23,19 @@ public class UserService {
 	@Getter(value=AccessLevel.NONE)
 	@Setter(value=AccessLevel.NONE)
 	private UtilService util;
+	@Autowired
+	private UserRepository userDB;
 
 	public UserService() {
 	}
 
-	public UserService(UtilService utilService) {
+	public UserService(UtilService utilService, UserRepository userDB) {
 		this.util = utilService;
-	}
-
-	@PostConstruct
-	public void init() throws DiscountifyException {
-		String usersListJson = util.getResourceFileContents("seed/Users.json");
-		Gson gson = new Gson();
-		UserList userList = gson.fromJson(usersListJson, UserList.class);
-		this.setMap(util.getUserMapFromUserList(userList.getUsers()));
+		this.userDB = userDB;
 	}
 
 	public Optional<User> getUserById(int userid) {
-		return Optional.ofNullable(map.get(userid));
+		return Optional.ofNullable(userDB.findOne(userid));
 	}
 
 	public boolean isUserEmployee(int userid) {

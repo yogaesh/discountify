@@ -1,5 +1,4 @@
-{
-	"users" : [
+[
 		{
 			"id" : 1,
 			"name" : "Employee Yo",
@@ -28,5 +27,4 @@
 			"isAffiliate" : false,
 			"createdDate" : "2016-04-01"
 		}		
-	]
-}
+]
