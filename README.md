@@ -28,7 +28,7 @@ Discounts are calculated as follows:
 
 ## Test coverage
 
-Discountify has 100% test coverage. The coverage report is available at: ${PROJECT_ROOT}/build/reports/coverage/index.html. For obvious reasons, a portion of the code such as POJO classes, classes with getters/setters only or classes using built-in Java/Spring features only, are not included in the report. 
+Discountify has 100% test coverage. The coverage report will be available at: ${PROJECT_ROOT}/build/reports/coverage/index.html when you run `gradle test jacocoTestReport`. For obvious reasons, a portion of the code such as POJO classes, classes with getters/setters only or classes using built-in Java/Spring features only, are not included in the report. 
 
 ## Caveats
 
