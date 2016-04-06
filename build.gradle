@@ -38,7 +38,7 @@ jacocoTestReport {
 }
 
 jar {
-	baseName = 'demo'
+	baseName = 'discountify'
 	version = '0.0.1-SNAPSHOT'
 }
 sourceCompatibility = 1.8
@@ -55,19 +55,20 @@ dependencies {
 	compile('org.projectlombok:lombok')
 	compile('com.google.code.gson:gson:2.6.2')
 	compile('com.google.guava:guava:19.0')
+	compile('com.h2database:h2:1.4.191')
+	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-web')
 	testCompile('org.springframework.boot:spring-boot-starter-test') 
 	testCompile('com.jayway.restassured:rest-assured:2.9.0')
 }
 
-
 eclipse {
-	classpath {
-		 containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
-		 containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8'
-	}
+       classpath {
+                containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
+                containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8'
+       }
 }
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '2.9'
+       gradleVersion = '2.9'
 }
