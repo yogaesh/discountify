@@ -22,12 +22,6 @@ public class LoyaltyDiscount extends Discount {
 				.flatMap(order -> userService.getUserById(order.getUserid()))
 				.filter(user -> utilService.isDateOverTwoYearsBack(user.getCreatedDate()))
 				.isPresent();
-
-		//		if(order == null || order.getUserid() == 0){
-//			return false;
-//		}
-//		User user = userService.getUserById(order.getUserid());
-//		return utilService.isDateOverTwoYearsBack(user.getCreatedDate());
 	}
 
 }

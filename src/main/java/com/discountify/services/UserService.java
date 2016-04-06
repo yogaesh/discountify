@@ -47,22 +47,14 @@ public class UserService {
 	}
 
 	public boolean isUserEmployee(int userid) {
-		return checkUserProperty(userid, "employee");
+		return getUserById(userid).filter(user -> user.isEmployee()).isPresent();
 	}
 
 	public boolean isUserAffiliate(int userid) {
-		return checkUserProperty(userid, "affiliate");
+		return getUserById(userid).filter(user -> user.isAffiliate()).isPresent();
 	}
 
 	public boolean isUserLoyal(int userid) {
-		return checkUserProperty(userid, "loyal");
-	}
-
-	private boolean checkUserProperty(int userid, String property) {
-		return getUserById(userid)
-				.filter(user -> (property.equals("employee") ? user.isEmployee() : 
-								(property.equals("affiliate") ? user.isAffiliate() : 
-								util.isDateOverTwoYearsBack(user.getCreatedDate()))))
-				.isPresent();
+		return getUserById(userid).filter(user -> util.isDateOverTwoYearsBack(user.getCreatedDate())).isPresent();
 	}
 }

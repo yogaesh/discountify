@@ -26,18 +26,7 @@ public class FlatDiscount extends Discount{
 		List<ItemCategory> list = new ArrayList<>();
 		return orderStream.filter(order -> order.getItems() != null)
 		.map(order -> utilService.getSubtotalExcludingCategories(order.getItems(), list) - order.getDiscounts())
-		.filter(amount -> amount > 100).isPresent();
-		
-		/*if(order == null || order.getItems() == null || order.getItems().isEmpty()){
-			return false;
-		}
-		
-		double totalAmount = order.getTotalAmount();
-		if(totalAmount == 0.0){
-			totalAmount = utilService.getSubtotalExcludingCategories(order.getItems(), null);
-		}
-		
-		return totalAmount-order.getDiscounts() > 100 ? true : false;*/
+		.filter(amount -> amount > 100).isPresent();		
 	}
 	
 }
