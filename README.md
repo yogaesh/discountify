@@ -34,3 +34,4 @@ Discountify has 100% test coverage. The coverage report will be available at: ${
 
 * H2 in-memory DB is used for simplicity
 * Logging, Detailed error handling with specific response codes, Application caching, query caching, monitoring probes and other usual suspects in a production-ready system have not been implemented. 
+* User management and surrounding security on REST calls have also been excluded for simplicity. The application uses 4 seed users (ids 1 through 4) for employee, affiliate, loyal user and a regular user respectively.
