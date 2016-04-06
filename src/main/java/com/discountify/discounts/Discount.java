@@ -1,6 +1,7 @@
 package com.discountify.discounts;
 
-import java.text.DecimalFormat;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,6 +16,7 @@ import com.discountify.pojo.Item;
 import com.discountify.pojo.Order;
 import com.discountify.services.UserService;
 import com.discountify.services.UtilService;
+
 import lombok.Setter;
 
 @Setter @Component
@@ -27,7 +29,7 @@ public abstract class Discount {
 	private Discount nextIfDiscountApplied;
 	private Discount nextIfDiscountNotApplied;
 	private String discountType;
-	private double discountValue;
+	private BigDecimal discountValue;
 	private int purchaseUnits;
 	
 	@Autowired
@@ -36,25 +38,27 @@ public abstract class Discount {
 	protected UtilService utilService;
 	
 	protected abstract boolean checkApplicability(Optional<Order> order);
-	protected double getDiscountAmount(Order order){
+	protected BigDecimal getDiscountAmount(Order order){
 		
 		List<Item> items = order.getItems();
 		
-		double total = order.getTotalAmount();
-		double currentDiscount = order.getDiscounts();
-		double netDiscount = 0;
+		BigDecimal total = order.getTotalAmount();
+		BigDecimal currentDiscount = order.getDiscounts();
 		
 		if(discountType.equals("absolute")){
-			if(total == 0){
+			if(total.equals(BigDecimal.ZERO)){
 				total = utilService.getSubtotalExcludingCategories(items, new ArrayList<>());
 			}
 			
-			netDiscount = purchaseUnits == 0 ? discountValue : ((int)((total-currentDiscount)/purchaseUnits)) * discountValue;
-			return formatCurrency(netDiscount);
+			if(purchaseUnits == 0){
+				return discountValue;
+			}else{
+				return total.subtract(currentDiscount).divide(new BigDecimal(purchaseUnits)).setScale(0, RoundingMode.FLOOR).multiply(discountValue).setScale(2, RoundingMode.HALF_UP);
+			}
+			
 		}
 		else{
-			netDiscount = discountValue * utilService.getSubtotalExcludingCategories(items, Arrays.asList(ItemCategory.GROCERY));
-			return formatCurrency(netDiscount);
+			return discountValue.multiply(utilService.getSubtotalExcludingCategories(items, Arrays.asList(ItemCategory.GROCERY))).setScale(2, RoundingMode.HALF_UP);
 		}
 		
 	}
@@ -62,12 +66,12 @@ public abstract class Discount {
 	public Order applyDiscount(Optional<Order> orderStream){
 		Order order = orderStream.get();
 		if(checkApplicability(orderStream)){
-			double currentDiscountAmount = order.getDiscounts();
-			double discountAmount = getDiscountAmount(order);
-			order.setDiscounts(currentDiscountAmount + discountAmount);
+			BigDecimal currentDiscountAmount = order.getDiscounts();
+			BigDecimal discountAmount = getDiscountAmount(order);
+			order.setDiscounts(currentDiscountAmount.add(discountAmount).setScale(2, RoundingMode.HALF_UP));
 			DiscountLineItem lineItem = new DiscountLineItem();
 			lineItem.setDescription(description);
-			lineItem.setAmount(discountAmount);
+			lineItem.setAmount(discountAmount.setScale(2, RoundingMode.HALF_UP));
 			if(order.getDiscountDetails() == null){
 				order.setDiscountDetails(new ArrayList<>());
 			}
@@ -80,10 +84,5 @@ public abstract class Discount {
 			order = nextIfDiscountNotApplied.applyDiscount(Optional.of(order));
 		}
 		return order;
-	}
-	
-	protected double formatCurrency(double value){
-		 DecimalFormat currencyFormat = new DecimalFormat("#.00");
-		 return Double.valueOf(currencyFormat.format(value));
 	}
 }

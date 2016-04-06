@@ -1,5 +1,6 @@
 package com.discountify.discounts;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import org.springframework.stereotype.Component;
@@ -13,7 +14,7 @@ public class LoyaltyDiscount extends Discount {
 		this.setId(1);
 		this.setDescription("5% discount for loyal customers");
 		this.setName("LoyaltyDiscount");
-		this.setDiscountValue(0.05);
+		this.setDiscountValue(new BigDecimal("0.05"));
 		this.setDiscountType("percentage");
 	}
 	@Override

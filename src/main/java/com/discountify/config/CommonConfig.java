@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import com.google.gson.Gson;
 
 @Configuration
-public class GsonFactory {
+public class CommonConfig {
 	
 	@Bean
 	public Gson getGson(){

@@ -1,6 +1,8 @@
 package com.discountify.services;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -58,29 +60,8 @@ public class UtilService {
 		return false;
 	}
 	
-	public double getSubtotalExcludingCategories(List<Item> items, List<ItemCategory> categoriesToExclude){
-		
-		return items.stream().filter(item -> !categoriesToExclude.contains(item.getCategory())).mapToDouble(Item::getPrice).sum();
-		
-		/*if (items == null){
-			return 0;
-		}
-		
-		double total = 0;
-		boolean includeAll = false;
-		
-		if(categoriesToExclude == null || categoriesToExclude.isEmpty()){
-			includeAll = true;
-		}
-		
-		for(Item item : items){
-			if(!includeAll && categoriesToExclude.contains(item.getCategory())){
-				continue;
-			}
-			total += item.getPrice();
-		}
-		
-		return total;*/
+	public BigDecimal getSubtotalExcludingCategories(List<Item> items, List<ItemCategory> categoriesToExclude){
+		return items.stream().filter(item -> !categoriesToExclude.contains(item.getCategory())).map(Item::getPrice).reduce(BigDecimal.ZERO, (price1, price2) -> price1.add(price2)).setScale(2, RoundingMode.HALF_UP);
 	}
 }
 

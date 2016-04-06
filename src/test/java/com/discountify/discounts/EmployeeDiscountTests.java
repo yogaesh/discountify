@@ -2,6 +2,7 @@ package com.discountify.discounts;
 
 import static org.junit.Assert.*;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import org.junit.Test;
@@ -14,7 +15,7 @@ public class EmployeeDiscountTests extends GenericDiscountTests {
 	
 	public EmployeeDiscountTests() {
 		discount = new EmployeeDiscount();
-		discountValue = 0.3;
+		discountValue = new BigDecimal("0.3");
 	}
 	
 	@Test

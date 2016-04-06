@@ -1,7 +1,8 @@
 package com.discountify.discounts;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -26,7 +27,7 @@ public class LoyaltyDiscountTests extends GenericDiscountTests {
 		Mockito.when(utilService.isDateOverTwoYearsBack(getPastDate(25, ChronoUnit.MONTHS))).thenReturn(true);
 		discount = new LoyaltyDiscount();
 		discount.setUtilService(utilService);
-		discountValue = 0.05;
+		discountValue = new BigDecimal("0.05");
 	}
 	
 	@Test

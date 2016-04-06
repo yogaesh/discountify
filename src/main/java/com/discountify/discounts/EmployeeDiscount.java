@@ -1,6 +1,7 @@
 package com.discountify.discounts;
 
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import org.springframework.stereotype.Component;
@@ -14,7 +15,7 @@ public class EmployeeDiscount extends Discount{
 		this.setId(1);
 		this.setDescription("30% discount for employees");
 		this.setName("EmployeeDiscount");
-		this.setDiscountValue(0.3);
+		this.setDiscountValue(new BigDecimal("0.3"));
 		this.setDiscountType("percentage");
 	}
 	

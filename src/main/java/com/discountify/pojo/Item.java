@@ -1,5 +1,7 @@
 package com.discountify.pojo;
 
+import java.math.BigDecimal;
+
 import com.discountify.item.categories.ItemCategory;
 
 import lombok.Getter;
@@ -10,5 +12,5 @@ public class Item {
 	private long id;
 	private String description;
 	private ItemCategory category;
-	private double price;
+	private BigDecimal price = BigDecimal.ZERO;
 }

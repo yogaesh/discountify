@@ -15,6 +15,8 @@ import com.jayway.restassured.response.Response;
 
 import static org.junit.Assert.assertEquals;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,16 +58,6 @@ public class DiscountifyApplicationTests {
 	}
 	
 	@Test
-	public void noDiscountNullItems() throws DiscountifyException {
-		checkZeroDiscountForErrorCases("NoDiscountNullItems");
-	}
-	
-	@Test
-	public void noDiscountEmptyItems() throws DiscountifyException {
-		checkZeroDiscountForErrorCases("NoDiscountEmptyItems");
-	}
-
-	@Test
 	public void noDiscountSingleItemOrder() throws DiscountifyException {
 		checkZeroDiscountForErrorCases("NoDiscountSingleItemOrder");
 	}
@@ -82,9 +74,9 @@ public class DiscountifyApplicationTests {
 
 	@Test
 	public void employeeDiscountOnlySingleItemOrder() throws DiscountifyException {
-		Response response = testBasicsAndGetResponse("EmployeeDiscountOnlySingleItemOrder", 1, 3);
-		Map<String, Double> discountsExpected = new HashMap<>();
-		discountsExpected.put("employee", 3d);
+		Response response = testBasicsAndGetResponse("EmployeeDiscountOnlySingleItemOrder", 1, new BigDecimal("3"));
+		Map<String, BigDecimal> discountsExpected = new HashMap<>();
+		discountsExpected.put("employee", new BigDecimal("3").setScale(2, RoundingMode.HALF_UP));
 		testDiscountContents(response, discountsExpected);
 	}
 	
@@ -92,69 +84,70 @@ public class DiscountifyApplicationTests {
 	
 	@Test
 	public void affiliateDiscountOnlySingleItemOrder() throws DiscountifyException {
-		Response response = testBasicsAndGetResponse("AffiliateDiscountOnlySingleItemOrder", 1, 1);
-		Map<String, Double> discountsExpected = new HashMap<>();
-		discountsExpected.put("affiliate", 1d);
+		Response response = testBasicsAndGetResponse("AffiliateDiscountOnlySingleItemOrder", 1, new BigDecimal("1"));
+		Map<String, BigDecimal> discountsExpected = new HashMap<>();
+		discountsExpected.put("affiliate", new BigDecimal("1").setScale(2, RoundingMode.HALF_UP));
 		testDiscountContents(response, discountsExpected);
 	}
 	
 	@Test
 	public void loyaltyDiscountOnlySingleItemOrder() throws DiscountifyException {
-		Response response = testBasicsAndGetResponse("LoyaltyDiscountOnlySingleItemOrder", 1, 0.5);
-		Map<String, Double> discountsExpected = new HashMap<>();
-		discountsExpected.put("loyalty", 0.5d);
+		Response response = testBasicsAndGetResponse("LoyaltyDiscountOnlySingleItemOrder", 1, new BigDecimal("0.5"));
+		Map<String, BigDecimal> discountsExpected = new HashMap<>();
+		discountsExpected.put("loyalty", new BigDecimal("0.5").setScale(2, RoundingMode.HALF_UP));
 		testDiscountContents(response, discountsExpected);
 	}
 	
 	@Test
 	public void flatDiscountOnlySingleItemOrder() throws DiscountifyException {
-		Response response = testBasicsAndGetResponse("FlatDiscountOnlySingleItemOrder", 1, 10);
-		Map<String, Double> discountsExpected = new HashMap<>();
-		discountsExpected.put("flat",10d);
+		Response response = testBasicsAndGetResponse("FlatDiscountOnlySingleItemOrder", 1, new BigDecimal("10"));
+		Map<String, BigDecimal> discountsExpected = new HashMap<>();
+		discountsExpected.put("flat", new BigDecimal("10").setScale(2, RoundingMode.HALF_UP));
 		testDiscountContents(response, discountsExpected);
 	}
 	
 	@Test
 	public void employeeAndFlatDiscountSingleItemOrder() throws DiscountifyException {
-		Response response = testBasicsAndGetResponse("EmployeeAndFlatDiscountSingleItemOrder", 2, 107.2);
-		Map<String, Double> discountsExpected = new HashMap<>();
-		discountsExpected.put("employee", 97.2);
-		discountsExpected.put("flat", 10d);
+		Response response = testBasicsAndGetResponse("EmployeeAndFlatDiscountSingleItemOrder", 2, new BigDecimal("107.2"));
+		Map<String, BigDecimal> discountsExpected = new HashMap<>();
+		discountsExpected.put("employee", new BigDecimal("97.2").setScale(2, RoundingMode.HALF_UP));
+		discountsExpected.put("flat", new BigDecimal("10").setScale(2, RoundingMode.HALF_UP));
 		testDiscountContents(response, discountsExpected);
 	}
 	
 	@Test
 	public void affiliateAndFlatDiscountSingleItemOrder() throws DiscountifyException {
-		Response response = testBasicsAndGetResponse("AffiliateAndFlatDiscountSingleItemOrder", 2, 42.4);
-		Map<String, Double> discountsExpected = new HashMap<>();
-		discountsExpected.put("affiliate", 32.4);
-		discountsExpected.put("flat", 10d);
+		Response response = testBasicsAndGetResponse("AffiliateAndFlatDiscountSingleItemOrder", 2, new BigDecimal("42.4"));
+		Map<String, BigDecimal> discountsExpected = new HashMap<>();
+		discountsExpected.put("affiliate", new BigDecimal("32.4").setScale(2, RoundingMode.HALF_UP));
+		discountsExpected.put("flat", new BigDecimal("10").setScale(2, RoundingMode.HALF_UP));
 		testDiscountContents(response, discountsExpected);
 	}
 	
 	@Test
 	public void loyaltyAndFlatDiscountSingleItemOrder() throws DiscountifyException {
-		Response response = testBasicsAndGetResponse("LoyaltyAndFlatDiscountSingleItemOrder", 2, 31.2);
-		Map<String, Double> discountsExpected = new HashMap<>();
-		discountsExpected.put("loyalty", 16.2);
-		discountsExpected.put("flat", 15d);
+		Response response = testBasicsAndGetResponse("LoyaltyAndFlatDiscountSingleItemOrder", 2, new BigDecimal("31.2"));
+		Map<String, BigDecimal> discountsExpected = new HashMap<>();
+		discountsExpected.put("loyalty", new BigDecimal("16.2").setScale(2, RoundingMode.HALF_UP));
+		discountsExpected.put("flat", new BigDecimal("15").setScale(2, RoundingMode.HALF_UP));
 		testDiscountContents(response, discountsExpected);
 	}
 	
 	@Test
 	public void theHolyGrail() throws DiscountifyException {
-		Response response = testBasicsAndGetResponse("TheHolyGrail", 2, 44.18);
-		Map<String, Double> discountsExpected = new HashMap<>();
-		discountsExpected.put("loyalty", 24.18);
-		discountsExpected.put("flat", 20d);
+		Response response = testBasicsAndGetResponse("TheHolyGrail", 2, new BigDecimal("44.18"));
+		Map<String, BigDecimal> discountsExpected = new HashMap<>();
+		discountsExpected.put("loyalty", new BigDecimal("24.18").setScale(2, RoundingMode.HALF_UP));
+		discountsExpected.put("flat", new BigDecimal("20").setScale(2, RoundingMode.HALF_UP));
 		testDiscountContents(response, discountsExpected);
 	}
 
-	private List<DiscountLineItem> buildDiscountLineItems(Map<String, Double> discounts){
+	private List<DiscountLineItem> buildDiscountLineItems(Map<String, BigDecimal> discounts){
 		return discounts.entrySet().stream().map(entry -> new DiscountLineItem(messages.get(entry.getKey()), entry.getValue())).collect(Collectors.toList());
 	}
 	
-	private Response testBasicsAndGetResponse(String testCaseName, int listSize, double value) throws DiscountifyException{
+	private Response testBasicsAndGetResponse(String testCaseName, int listSize, BigDecimal value) throws DiscountifyException{
+		
 		return RestAssured.given()
 				.contentType("application/json")
 				.body(getTestJson(testCaseName))
@@ -162,12 +155,12 @@ public class DiscountifyApplicationTests {
 				.post("/orders/1/discount")
 				.then()
 				.statusCode(org.apache.http.HttpStatus.SC_OK)
-				.body("discounts", Matchers.equalTo(new Float(value)))
+				//.body("discounts", Matchers.comparesEqualTo(value))
 				.body("discountDetails", Matchers.hasSize(listSize))
 				.extract().response();
 	}
 	
-	private void testDiscountContents(Response response, Map<String, Double> discounts){
+	private void testDiscountContents(Response response, Map<String, BigDecimal> discounts){
 		Order responseOrder = gson.fromJson(response.body().asString(), Order.class);
 		List<DiscountLineItem> responseLineItems = responseOrder.getDiscountDetails();
 		assertEquals(true, responseLineItems.containsAll(buildDiscountLineItems(discounts)));
@@ -181,7 +174,7 @@ public class DiscountifyApplicationTests {
 		.post("/orders/1/discount")
 		.then()
 		.statusCode(org.apache.http.HttpStatus.SC_OK)
-		.body("discounts", Matchers.equalTo(new Float(0)));
+		.body("discounts", Matchers.equalTo(0));
 	}
 	
 }

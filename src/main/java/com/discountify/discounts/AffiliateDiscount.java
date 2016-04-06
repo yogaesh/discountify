@@ -2,6 +2,7 @@ package com.discountify.discounts;
 
 
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import org.springframework.stereotype.Component;
@@ -15,7 +16,7 @@ public class AffiliateDiscount extends Discount {
 		this.setId(2);
 		this.setDescription("10% discount for affiliates");
 		this.setName("AffiliateDiscount");
-		this.setDiscountValue(0.1);
+		this.setDiscountValue(new BigDecimal("0.1"));
 		this.setDiscountType("percentage");
 	}
 	

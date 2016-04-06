@@ -1,5 +1,6 @@
 package com.discountify.pojo;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import lombok.Getter;
@@ -9,8 +10,8 @@ import lombok.Setter;
 public class Order {
 	private List<Item> items;
 	private int userid;
-	private double totalAmount;
-	private double discounts;
-	private double amountAfterDiscount;
+	private BigDecimal totalAmount = BigDecimal.ZERO;
+	private BigDecimal discounts = BigDecimal.ZERO;
+	private BigDecimal amountAfterDiscount;
 	private List<DiscountLineItem> discountDetails;
 }

@@ -2,6 +2,7 @@ package com.discountify.services;
 
 import static org.junit.Assert.*;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -72,18 +73,6 @@ public class UtilServiceTests {
 	}
 	
 	@Test
-	public void getSubtotalExcludingCategoriesEmptyLists() {
-		assertEquals(new Double(0), new Double(utilService.getSubtotalExcludingCategories(new ArrayList<Item>(), new ArrayList<ItemCategory>())));
-	}
-
-	@Test
-	public void getSubtotalExcludingCategoriesEmptyItemsList() {
-		ArrayList<ItemCategory> categories = new ArrayList<>();
-		categories.add(ItemCategory.GROCERY);
-		assertEquals(new Double(0), new Double(utilService.getSubtotalExcludingCategories(new ArrayList<Item>(), categories)));
-	}
-	
-	@Test
 	public void getSubtotalExcludingCategoriesEmptyCategoriesList() {
 		ArrayList<Item> items = new ArrayList<>();
 		
@@ -91,17 +80,17 @@ public class UtilServiceTests {
 		item1.setCategory(ItemCategory.GROCERY);
 		item1.setDescription("Banana");
 		item1.setId(1);
-		item1.setPrice(5.99);
+		item1.setPrice(new BigDecimal("5.99"));
 		items.add(item1);
 		
 		Item item2 = new Item();
 		item2.setCategory(ItemCategory.FMCG);
 		item2.setDescription("Shampoo");
 		item2.setId(2);
-		item2.setPrice(8.99);
+		item2.setPrice(new BigDecimal("8.99"));
 		items.add(item2);
 
-		assertEquals(new Double(5.99 + 8.99), new Double(utilService.getSubtotalExcludingCategories(items, new ArrayList<ItemCategory>())));
+		assertEquals(new BigDecimal("14.98"), utilService.getSubtotalExcludingCategories(items, new ArrayList<ItemCategory>()));
 	}
 	
 	@Test
@@ -115,24 +104,24 @@ public class UtilServiceTests {
 		item1.setCategory(ItemCategory.GROCERY);
 		item1.setDescription("Banana");
 		item1.setId(1);
-		item1.setPrice(5.99);
+		item1.setPrice(new BigDecimal("5.99"));
 		items.add(item1);
 		
 		Item item2 = new Item();
 		item2.setCategory(ItemCategory.FMCG);
 		item2.setDescription("Shampoo");
 		item2.setId(2);
-		item2.setPrice(8.99);
+		item2.setPrice(new BigDecimal("8.99"));
 		items.add(item2);
 		
 		Item item3 = new Item();
 		item3.setCategory(ItemCategory.FMCG);
 		item3.setDescription("Soap");
 		item3.setId(3);
-		item3.setPrice(8.99);
+		item3.setPrice(new BigDecimal("8.99"));
 		items.add(item3);
 
-		assertEquals(new Double(8.99 * 2), new Double(utilService.getSubtotalExcludingCategories(items, categories)));
+		assertEquals(new BigDecimal("17.98"), utilService.getSubtotalExcludingCategories(items, categories));
 	}
 
 		
