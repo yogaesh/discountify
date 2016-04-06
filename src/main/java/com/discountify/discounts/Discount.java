@@ -2,6 +2,7 @@ package com.discountify.discounts;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,15 +37,8 @@ public abstract class Discount {
 	
 	protected abstract boolean checkApplicability(Optional<Order> order);
 	protected double getDiscountAmount(Order order){
-		List<ItemCategory> categories = new ArrayList<>();
-		if(order == null){
-			return 0;
-		}
 		
 		List<Item> items = order.getItems();
-		if(items == null || items.isEmpty()){
-			return 0;
-		}
 		
 		double total = order.getTotalAmount();
 		double currentDiscount = order.getDiscounts();
@@ -52,17 +46,17 @@ public abstract class Discount {
 		
 		if(discountType.equals("absolute")){
 			if(total == 0){
-				total = utilService.getSubtotalExcludingCategories(items, categories);
+				total = utilService.getSubtotalExcludingCategories(items, new ArrayList<>());
 			}
 			
 			netDiscount = purchaseUnits == 0 ? discountValue : ((int)((total-currentDiscount)/purchaseUnits)) * discountValue;
 			return formatCurrency(netDiscount);
 		}
-
-		categories.add(ItemCategory.GROCERY);
-		netDiscount = discountValue * utilService.getSubtotalExcludingCategories(items, categories);
+		else{
+			netDiscount = discountValue * utilService.getSubtotalExcludingCategories(items, Arrays.asList(ItemCategory.GROCERY));
+			return formatCurrency(netDiscount);
+		}
 		
-		return formatCurrency(netDiscount);
 	}
 	
 	public Order applyDiscount(Optional<Order> orderStream){

@@ -19,6 +19,9 @@ public class DiscountifyRestController {
 	
 	@ResponseBody @RequestMapping(value="discount", method = {RequestMethod.POST}, consumes = {"application/json"})
 	public Order getDiscountForOrder(@RequestBody Order order) {
+		if(order.getItems() == null || order.getItems().isEmpty()){
+			return order;
+		}
 		return discountService.getDiscountAmount(order);
 	}
 }
